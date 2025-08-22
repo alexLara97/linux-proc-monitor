@@ -4,6 +4,8 @@
 #include <sstream>
 #include <thread>
 #include <chrono>
+#include <dirent.h>
+#include <algorithm>
 
 using namespace std;
 
@@ -59,14 +61,44 @@ void printMemoryUsage() {
     cout<<"Memory Usage: " << memUsed << "%" << endl;
 }
 
+void listProcesses() {
+    DIR* dir = opendir("/proc");
+    if (!dir) return;
+
+    struct dirent* entry;
+    while ((entry = readdir(dir)) != NULL){
+        if (entry->d_type == DT_DIR) {
+            string dirname = entry->d_name;
+            if (all_of(dirname.begin(), dirname.end(), ::isdigit)) {
+                string commPath = "/proc/" + dirname + "/comm";
+                ifstream commFile(commPath);
+                string name;
+                if (commFile.is_open()) {
+                    getline(commFile, name);
+                    cout << "PID: " << dirname << "| Process: " << name << endl;
+                }
+            }
+        }
+    }
+    closedir(dir);
+}
+
 int main() {
+    while (true) {
     CPUData prev = readCPUStatus();
-    this_thread::sleep_for(chrono::seconds(1));
+    this_thread::sleep_for(chrono::milliseconds(500));
     CPUData curr = readCPUStatus();
 
     float cpuUsage = calculateCPUUsage(prev, curr);
+    cout << "\033[2J\033[1;1H"; // clear screen
+    cout << "=== Process Monitor ===" << endl;
     cout<<"CPU Usage: " << cpuUsage << "%" << endl;
+    
     printMemoryUsage();
+    cout << "------------------------" << endl;
+    // listProcesses();
 
+    this_thread::sleep_for(chrono::seconds(2));
+    }
     return 0;
 }
