@@ -41,6 +41,24 @@ float calculateCPUUsage(const CPUData& prev, const CPUData& curr){
     return (float)(totalDiff - idleDiff) / totalDiff * 100.0;
 }
 
+void printMemoryUsage() {
+    ifstream file("/proc/meminfo");
+    string key;
+    unsigned long value;
+    string unit;
+    unsigned long memTotal = 0, memAvailable = 0;
+
+    while (file >> key >> value >> unit) {
+        if (key == "MemTotal:") memTotal = value;
+        if (key == "MemAvailable:") {
+            memAvailable = value;
+            break;
+        }
+    }
+    float memUsed = (float)(memTotal - memAvailable) / memTotal * 100.0;
+    cout<<"Memory Usage: " << memUsed << "%" << endl;
+}
+
 int main() {
     CPUData prev = readCPUStatus();
     this_thread::sleep_for(chrono::seconds(1));
@@ -48,6 +66,7 @@ int main() {
 
     float cpuUsage = calculateCPUUsage(prev, curr);
     cout<<"CPU Usage: " << cpuUsage << "%" << endl;
+    printMemoryUsage();
 
     return 0;
 }
