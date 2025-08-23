@@ -9,6 +9,7 @@ int main() {
         double mem = getMemoryUsage();
         double temp = getCPUTemperature();
 
+        std::cout << "\033[2J\033[1;1H" << std::endl;
         std::cout << "CPU Usage: " << cpu << "% | "
                   << "Memory Usage: " << mem << "% | "
                   << "CPU Temp: " << temp << "°C"
