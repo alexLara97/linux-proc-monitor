@@ -8,4 +8,5 @@ include_directories(include)
 add_executable(monitor
     src/main.cpp
     src/SystemMonitor.cpp
+    src/utils.cpp
 )
