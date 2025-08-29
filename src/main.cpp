@@ -9,11 +9,17 @@
 #include "SystemMonitor.h"
 #include "utils/UdpSocketManager.h"
 #include "utils/DataUtils.h"
+#include "utils/ConfigManager.h"
 
 
 int main() {
+    //Configuration
+    ConfigManager config("config/config.ini");
+    std::string ip = config.get("network", "ip");
+    int port = config.getInt("network", "port");
+    if (ip == "" || port == -1) return -1;
     // Socket implementation
-    UdpSocketManager socket("127.0.0.1", 8888);
+    UdpSocketManager socket(ip, port);
     // const char* message = "Hello from Alex'raspberry pi";
 
     while (true) {

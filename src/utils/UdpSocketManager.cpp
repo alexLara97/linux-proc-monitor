@@ -3,13 +3,19 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 
-UdpSocketManager::UdpSocketManager(const char* ip_address, uint16_t port)
+UdpSocketManager::UdpSocketManager(const std::string& ip_address, int port)
     : isInitialized(false)
 {    
-    sock = socket(AF_INET, SOCK_DGRAM, 0);
+   sock = socket(AF_INET, SOCK_DGRAM, 0);
+    if (sock < 0) {
+        std::cerr << "Error creando socket UDP\n";
+        return;
+    }
+
     destAddr.sin_family = AF_INET;
     destAddr.sin_port = htons(port);
-    destAddr.sin_addr.s_addr = inet_addr(ip_address);
+    inet_pton(AF_INET, ip_address.c_str(), &destAddr.sin_addr);
+    isInitialized = true;
 }
 
 UdpSocketManager::~UdpSocketManager() {

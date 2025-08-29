@@ -6,7 +6,7 @@
 
 class UdpSocketManager {
 public:
-    UdpSocketManager(const char* ip_address, uint16_t port);
+    UdpSocketManager(const std::string& ip_address, int port);
     ~UdpSocketManager();
 
     bool send(const std::string& message);
