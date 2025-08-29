@@ -1,4 +1,3 @@
-#include "utils.h"
 #include <sstream>
 
 std::string buildJson(double cpu, double men, double temp) {

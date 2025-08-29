@@ -7,21 +7,14 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include "SystemMonitor.h"
-#include "utils.h"
+#include "utils/UdpSocketManager.h"
+#include "utils/DataUtils.h"
 
 
 int main() {
     // Socket implementation
-    int sock;
-    struct sockaddr_in server_addr;
-    const char* message = "Hello from Alex'raspberry pi";
-
-    sock = socket(AF_INET, SOCK_DGRAM, 0);
-    server_addr.sin_family = AF_INET;
-    server_addr.sin_port = htons(8080);
-    server_addr.sin_addr.s_addr = inet_addr("127.0.0.1");
-    
-    
+    UdpSocketManager socket("127.0.0.1", 8888);
+    // const char* message = "Hello from Alex'raspberry pi";
 
     while (true) {
         double cpu = getCPUUsage();
@@ -36,10 +29,9 @@ int main() {
         
         // Send info by udp socket
         std::string json = buildJson(cpu, mem, temp);
-        int sent = sendto(sock, json.c_str(), json.size(), 0,
-                      (struct sockaddr*)&server_addr, sizeof(server_addr));
+        socket.send(json);
         std::this_thread::sleep_for(std::chrono::seconds(1));
     }
-    close(sock);
+    socket.closeSocket();
     return 0;
 }
