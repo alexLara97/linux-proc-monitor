@@ -23,7 +23,7 @@ int main() {
     // const char* message = "Hello from Alex'raspberry pi";
 
     while (true) {
-        double cpu = getCPUUsage();
+        double cpu = getCPUUsage(); 
         double mem = getMemoryUsage();
         double temp = getCPUTemperature();
 
