@@ -10,7 +10,20 @@ It displays **CPU usage, memory usage, and CPU temperature** in real time, using
 - Show **Memory usage** in percentage  
 - Show **CPU temperature** (via `/sys/class/thermal`)  
 - Lightweight, written in **modern C++17**   
+- Send system metrics as JSON via UDP to a configurable IP and port   
 
+---
+
+## Configuration  
+
+The application reads its network settings from a configuration file located at `config/config.ini`.  
+You can specify the destination IP and port for the JSON payload:
+
+```ini
+[network]
+ip = 192.168.1.50
+port = 8888
+```
 ---
 
 ## Build Instructions  
